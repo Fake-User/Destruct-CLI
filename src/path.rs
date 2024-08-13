@@ -1,9 +1,10 @@
 use std::io::prelude::*;
+
+use crate::console;
 extern crate dirs;
 
 pub fn get_path() -> String {
-    let config_dir = dirs::config_local_dir().unwrap().into_os_string().into_string().unwrap();
-    let config_file_path = format!("{}/Destruct/destruct-cli-config.txt", config_dir);
+    let config_file_path = format!("{}/Destruct/destruct-cli-config.txt", dirs::config_local_dir().unwrap().into_os_string().into_string().unwrap());
     match std::fs::read_to_string(&config_file_path){
         Ok(s) => {
             if s.len() > 3 {return s}
@@ -13,28 +14,55 @@ pub fn get_path() -> String {
     }
 }
 
+//format!("{}/Destruct/", dirs::audio_dir().unwrap().into_os_string().into_string().unwrap())
+
 pub fn set_path(){
-    let default_path = format!("{}/Destruct/", dirs::audio_dir().unwrap().into_os_string().into_string().unwrap());
-    println!("{}", format!("enter path to save library or use default: {}", default_path));
-    let mut samples_path = String::new();
-    match std::io::stdin().read_line(&mut samples_path){
-        Ok(_) => {
-            let mut path = &default_path;
-            if samples_path.len() < 3 {println!("path not valid")}
-            else{path = &samples_path};
+    let home_path = dirs::home_dir().unwrap().into_os_string().into_string().unwrap();
+    let default_path = format!("{}/Destruct", dirs::audio_dir().unwrap().into_os_string().into_string().unwrap());
+    let config_path = format!("{}/Destruct", dirs::config_local_dir().unwrap().into_os_string().into_string().unwrap());
 
-            let config_dir = format!("{}/Destruct", dirs::config_local_dir().unwrap().into_os_string().into_string().unwrap());
-            let absolute_config_dir = std::path::absolute(&config_dir).unwrap();
-            std::fs::create_dir_all(&absolute_config_dir).unwrap();
-
-            let config_file = format!("{}/destruct-cli-config.txt", &config_dir);
-            let absolute_config_file = std::path::absolute(&config_file).unwrap();
-            let mut file = std::fs::File::create(&absolute_config_file).unwrap();
-            write!(file, "{}", path).unwrap();
-            println!("{}", format!("set library path to {}", path));
+    loop{
+        console::clear_previous_line();
+        println!("{}", format!("enter path to save library or use default: {}", default_path));
+        let mut user_path = String::new();
+        match std::io::stdin().read_line(&mut user_path){
+            Ok(_) => {
+                if user_path.trim() == "quit".to_string(){
+                    console::clear();
+                    std::process::exit(0x0100);
+                }
+                if user_path.trim() == "help".to_string(){
+                    console::help();
+                    break;
+                }
+                if user_path.starts_with(home_path.as_str()) || user_path.starts_with("~") || user_path == "\n".to_string(){
+                    if user_path == "\n".to_string(){
+                        console::clear_previous_line();
+                        println!("using default path - {}", default_path);
+                        user_path = default_path;
+                    }
+                    else if user_path == "~".to_string() || user_path == "~/".to_string(){
+                        user_path = home_path;
+                    }
+                    else if user_path.starts_with("~"){
+                        user_path = user_path.trim().to_string();
+                        user_path = format!("{}{}", home_path, user_path[1..].to_string())
+                    };
+                    let absolute_config_path = std::path::absolute(&config_path).unwrap();
+                    std::fs::create_dir_all(&absolute_config_path).unwrap();
+                    let config_file = format!("{}/destruct-cli-config.txt", &config_path);
+                    let absolute_config_file = std::path::absolute(&config_file).unwrap();
+                    let mut file = std::fs::File::create(&absolute_config_file).unwrap();
+                    write!(file, "{}", user_path).unwrap();
+                    console::heading(format!("set library path to - {}", user_path).as_str());
+                    break;
+                }
+                else{
+                    println!("ERROR - path must be reltive to your home folder");
+                }
+            }
+            Err(e) => {println!("{}", e)}
         }
-        Err(e) => {println!("{}", e)}
     }
-
 
 }

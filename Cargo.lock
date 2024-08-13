@@ -71,6 +71,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "ansi-escapes"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "10b98e9c74265950a28ae39c02e290858714c23071ab4f71c61d2908e2edfe44"
+
+[[package]]
 name = "ansi_term"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1000,6 +1006,7 @@ dependencies = [
 name = "destruct-cli"
 version = "0.1.0"
 dependencies = [
+ "ansi-escapes",
  "ansi_term",
  "dirs",
  "reqwest",
