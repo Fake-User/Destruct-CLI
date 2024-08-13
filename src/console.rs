@@ -19,9 +19,9 @@ pub fn clear_previous_line(){
 fn center(text: &str) -> String{
     let characters: Vec<char> = text.chars().collect();
     let length = text.len();
-    let padding = (96 - length) / 2;
+    let padding = (95 - length) / 2;
     let mut chars: Vec<char> = vec![];
-    for c in 0..96 {
+    for c in 0..95 {
         if c < padding {chars.push(' ')}
         else if c < padding + length {chars.push(characters[c - padding])}
         else {chars.push(' ')};
@@ -67,14 +67,14 @@ pub fn help(){
     let library_path = path::get_path();
     clear();
     logo();
-    heading(format!("DESTRUCT CLI | LIBRARY PATH - {}", library_path).as_str());
+    heading(format!("DESTRUCT CLI | LIBRARY PATH - {}", library_path.trim()).as_str());
 
     let logo_array: Vec<&str> = vec![
-        "                 sync - sync library                     help - list commands",
-        "                 path - set library path                 quit - quit destruct-cli"
+        "sync ------- sync library         help ------- list commands",
+        "path --- set library path         quit --- quit destruct-cli"
 
     ];
 
-    for line in logo_array {println!("{}", line)};
+    for line in logo_array {println!("{}", center(line))};
     println!("");
 }
