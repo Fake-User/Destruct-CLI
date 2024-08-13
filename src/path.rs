@@ -8,9 +8,9 @@ pub fn get_path() -> String {
     match std::fs::read_to_string(&config_file_path){
         Ok(s) => {
             if s.len() > 3 {return s}
-            else{ return "NOT SET".to_string()};
+            else{ return "LIBRARY PATH NOT SET".to_string()};
         },
-        Err(e) => "NOT SET".to_string(),
+        Err(e) => "LIBRARY PATH NOT SET".to_string(),
     }
 }
 
@@ -20,7 +20,7 @@ pub fn set_path(){
     let config_path = format!("{}/Destruct", dirs::config_local_dir().unwrap().into_os_string().into_string().unwrap());
     console::clear_previous_line();
     loop{
-        println!("{}", format!("enter path to save library or use default: {}", default_path));
+        println!("{}", format!("enter path to sync library or use default - {}", default_path));
         let mut user_path = String::new();
         match std::io::stdin().read_line(&mut user_path){
             Ok(_) => {

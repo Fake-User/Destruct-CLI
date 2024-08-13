@@ -19,7 +19,7 @@ pub async fn sync(){
     console::clear_previous_line();
     loop {
         let local_path = path::get_path();
-        if local_path != "NOT SET".to_string(){
+        if local_path != "LIBRARY PATH NOT SET".to_string(){
             println!("syncing library to - {}", local_path);
             let res = reqwest::get("https://destruct.rcdis.co/creds")
                 .await.unwrap()
