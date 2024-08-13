@@ -70,8 +70,9 @@ pub fn help(){
     heading(format!("DESTRUCT CLI | LIBRARY PATH - {}", library_path).as_str());
 
     let logo_array: Vec<&str> = vec![
-        "              sync - sync library                       help - list cli arguements",
-        "              path - set library path                   quit - quit destruct-cli"
+        "                 sync - sync library                     help - list commands",
+        "                 path - set library path                 quit - quit destruct-cli"
+
     ];
 
     for line in logo_array {println!("{}", line)};
