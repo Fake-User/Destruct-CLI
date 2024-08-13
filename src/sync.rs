@@ -4,7 +4,7 @@ use s3sync::pipeline::Pipeline;
 use s3sync::config::args::parse_from_args;
 use s3sync::types::token::create_pipeline_cancellation_token;
 
-#[path = "./path.rs"] mod path;
+use crate::path;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Creds {
@@ -51,7 +51,7 @@ pub async fn sync(){
             pipeline.close_stats_sender();
             pipeline.run().await;
             assert!(!pipeline.has_error());
-            console::heading("SYNC COMPLETED");
+            console::heading(format!("COMPLETED SYNC TO - {}", local_path).as_str());
             break;
         }
         else{

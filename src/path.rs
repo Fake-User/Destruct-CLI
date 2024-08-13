@@ -14,15 +14,12 @@ pub fn get_path() -> String {
     }
 }
 
-//format!("{}/Destruct/", dirs::audio_dir().unwrap().into_os_string().into_string().unwrap())
-
 pub fn set_path(){
     let home_path = dirs::home_dir().unwrap().into_os_string().into_string().unwrap();
     let default_path = format!("{}/Destruct", dirs::audio_dir().unwrap().into_os_string().into_string().unwrap());
     let config_path = format!("{}/Destruct", dirs::config_local_dir().unwrap().into_os_string().into_string().unwrap());
-
+    console::clear_previous_line();
     loop{
-        console::clear_previous_line();
         println!("{}", format!("enter path to save library or use default: {}", default_path));
         let mut user_path = String::new();
         match std::io::stdin().read_line(&mut user_path){
@@ -54,7 +51,7 @@ pub fn set_path(){
                     let absolute_config_file = std::path::absolute(&config_file).unwrap();
                     let mut file = std::fs::File::create(&absolute_config_file).unwrap();
                     write!(file, "{}", user_path).unwrap();
-                    console::heading(format!("set library path to - {}", user_path).as_str());
+                    console::heading(format!("SET LIBRARY PATH TO - {}", user_path).as_str());
                     break;
                 }
                 else{
@@ -64,5 +61,4 @@ pub fn set_path(){
             Err(e) => {println!("{}", e)}
         }
     }
-
 }

@@ -2,7 +2,7 @@ use ansi_term::Style;
 use ansi_term::Colour::RGB;
 use ansi_escapes::{CursorPrevLine, EraseLine};
 
-#[path ="./path.rs"] mod path;
+use crate::path;
 
 pub fn heading(text: &str){
     let center: String = center(text);
@@ -63,19 +63,8 @@ pub fn logo(){
     for line in logo_array {println!("{}", Style::new().fg(RGB(255, 0, 51)).paint(center(line)))};
 }
 
-fn get_path() -> String {
-    let config_file_path = format!("{}/Destruct/destruct-cli-config.txt", dirs::config_local_dir().unwrap().into_os_string().into_string().unwrap());
-    match std::fs::read_to_string(&config_file_path){
-        Ok(s) => {
-            if s.len() > 3 {return s}
-            else{ return "NOT SET".to_string()};
-        },
-        Err(e) => "NOT SET".to_string(),
-    }
-}
-
 pub fn help(){
-    let library_path = get_path();
+    let library_path = path::get_path();
     clear();
     logo();
     heading(format!("DESTRUCT CLI | LIBRARY PATH - {}", library_path).as_str());
