@@ -24,11 +24,12 @@ pub fn set_path(){
         let mut user_path = String::new();
         match std::io::stdin().read_line(&mut user_path){
             Ok(_) => {
-                if user_path.trim() == "quit".to_string(){
+                user_path = user_path.trim().to_string();
+                if user_path == "quit".to_string(){
                     console::clear();
                     std::process::exit(0x0100);
                 }
-                if user_path.trim() == "help".to_string(){
+                if user_path == "help".to_string(){
                     console::help();
                     break;
                 }
@@ -42,7 +43,6 @@ pub fn set_path(){
                         user_path = home_path;
                     }
                     else if user_path.starts_with("~"){
-                        user_path = user_path.trim().to_string();
                         user_path = format!("{}{}", home_path, user_path[1..].to_string())
                     };
                     let absolute_config_path = std::path::absolute(&config_path).unwrap();
