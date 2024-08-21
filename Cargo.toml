@@ -1,6 +1,6 @@
 [package]
 name = "destruct-cli"
-version = "0.1.0"
+version = "0.1.6"
 edition = "2021"
 repository = "https://github.com/Fake-User/Destruct-CLI.git"
 
@@ -12,6 +12,7 @@ codegen-units = 1
 # The profile that 'cargo dist' will build with
 [profile.dist]
 inherits = "release"
+lto = "thin"
 
 [dependencies]
 reqwest = { version = "0.12.5", features = ["json"] }
