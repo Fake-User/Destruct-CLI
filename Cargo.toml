@@ -2,11 +2,17 @@
 name = "destruct-cli"
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/Fake-User/Destruct-CLI.git"
 
 [profile.release]
 strip = true
 lto = true
 codegen-units = 1
+
+# The profile that 'cargo dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
 
 [dependencies]
 reqwest = { version = "0.12.5", features = ["json"] }
@@ -19,3 +25,18 @@ tracing = "0.1.40"
 serde_json = "1"
 s3sync = "1.4.0"
 dirs = "5.0.1"
+
+# Config for 'cargo dist'
+[workspace.metadata.dist]
+# The preferred cargo-dist version to use in CI (Cargo.toml SemVer syntax)
+cargo-dist-version = "0.21.1"
+# CI backends to support
+ci = "github"
+# The installers to generate for each app
+installers = ["shell", "powershell"]
+# Target platforms to build apps for (Rust target-triple syntax)
+targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc"]
+# Path that installers should place binaries in
+install-path = "CARGO_HOME"
+# Whether to install an updater program
+install-updater = true
