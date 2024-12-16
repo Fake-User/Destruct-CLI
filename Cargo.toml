@@ -5,9 +5,9 @@ edition = "2021"
 repository = "https://github.com/Fake-User/Destruct-CLI.git"
 
 [profile.release]
+codegen-units = 1
 strip = true
 lto = true
-codegen-units = 1
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
