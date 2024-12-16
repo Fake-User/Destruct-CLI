@@ -1,6 +1,6 @@
 [package]
 name = "destruct-cli"
-version = "0.1.7"
+version = "0.1.8"
 edition = "2021"
 repository = "https://github.com/Fake-User/Destruct-CLI.git"
 
