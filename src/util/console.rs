@@ -1,4 +1,5 @@
 use terminal_size::terminal_size;
+use crate::util::path;
 
 fn center(text: &str) -> String {
     let term_width = terminal_size().unwrap().0.0;
@@ -46,9 +47,10 @@ pub fn logo(){
 }
 
 pub fn help(){
+    let library_path = path::get_path();
     clear();
     logo();
-    heading("DESTRUCT CLI");
+    heading(format!("DESTRUCT CLI | PATH - {}", library_path).as_str());
 
     let logo_array: Vec<&str> = vec![
         "sync ------- sync library        help ------- list commands",
