@@ -1,12 +1,8 @@
-#![allow(dead_code, unused_variables)]
 mod util;
 mod cmd;
 
 #[tokio::main]
 async fn main(){
-    let args: Vec<String> = std::env::args().collect();
-    let path: &String = &args[0];
-
     tracing_subscriber::fmt()
         .with_max_level(tracing::Level::INFO)
         .with_line_number(false)

@@ -1,11 +1,4 @@
 use terminal_size::terminal_size;
-use std::io::{self, Write};
-
-pub fn prompt(message: &str) -> String {
-    print!("{}", message);
-    io::stdout().flush().unwrap();
-    String::from(io::stdin().lines().next().unwrap().unwrap())
-}
 
 fn center(text: &str) -> String {
     let term_width = terminal_size().unwrap().0.0;
