@@ -1,10 +1,10 @@
+use s3sync::types::token::create_pipeline_cancellation_token;
+use s3sync::config::args::parse_from_args;
+use serde::{Deserialize, Serialize};
+use s3sync::pipeline::Pipeline;
+use s3sync::config::Config;
 use crate::util::console;
 use crate::cmd::path;
-use serde::{Deserialize, Serialize};
-use s3sync::config::Config;
-use s3sync::pipeline::Pipeline;
-use s3sync::config::args::parse_from_args;
-use s3sync::types::token::create_pipeline_cancellation_token;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Creds {
@@ -20,18 +20,17 @@ pub async fn sync(){
         if local_path != "LIBRARY PATH NOT SET".to_string(){
             println!("syncing library to - {}", local_path);
             let res = reqwest::get("https://destruct-server.rcdis.co/creds")
-                .await.unwrap()
+                .await.expect("ERROR - could not connect to server")
                 .text()
                 .await.unwrap();
 
             let res_creds = res.as_str();
-
             let creds: Creds = serde_json::from_str(&res_creds).unwrap();
 
-            let r2_key = creds.access_key_id;
-            let r2_session_token = creds.session_token;
-            let r2_secret_key = creds.secret_access_key;
             let r2_endpoint = "https://38b60100935d30d769c3198e265d1167.r2.cloudflarestorage.com";
+            let r2_secret_key = creds.secret_access_key;
+            let r2_session_token = creds.session_token;
+            let r2_key = creds.access_key_id;
 
             let args = vec![
                 "DESTRUCT",

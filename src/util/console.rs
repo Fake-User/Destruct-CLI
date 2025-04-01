@@ -20,7 +20,7 @@ pub fn heading(text: &str){
 }
 
 pub fn clear_previous_line(){
-    print!("\x1b[F\x1b[2K");
+    print!("\x1b[F\x1b[2K\n");
 }
 
 pub fn clear(){
