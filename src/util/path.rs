@@ -12,6 +12,14 @@ pub fn get_path() -> String {
     }
 }
 
+fn write_config(config_path: &std::path::PathBuf, library_path: &std::path::PathBuf) {
+    std::fs::create_dir_all(&config_path).expect("ERROR - create config directory failed");
+    let config_file = config_path.join("destruct-cli-config.txt");
+    let mut file = std::fs::File::create(&config_file).expect("ERROR - create config file failed");
+    write!(file, "{}", library_path.display()).expect("ERROR - write config file failed");
+    console::heading(&format!("SET LIBRARY PATH TO - {}", library_path.display()));
+}
+
 pub fn set_path(){
     let home_dir = dirs::home_dir().expect("ERROR - home directory not found");
     let default_path = dirs::audio_dir().expect("ERROR - audio directory not found").join("Destruct");
@@ -25,15 +33,11 @@ pub fn set_path(){
             Ok(_) => {
                 let user_input = user_input.trim();
 
-                match user_input {
+                match user_input{
                     "" => {
                         console::clear_previous_line();
                         println!("using default path - {}", default_path.display());
-                        std::fs::create_dir_all(&config_path).expect("ERROR - create config directory failed");
-                        let config_file = config_path.join("destruct-cli-config.txt");
-                        let mut file = std::fs::File::create(&config_file).expect("ERROR - create config file failed");
-                        write!(file, "{}", default_path.display()).expect("ERROR - write config file failed");
-                        console::heading(&format!("SET LIBRARY PATH TO - {}", default_path.display()));
+                        write_config(&config_path, &default_path);
                         break;
                     }
                     _ => {
@@ -41,17 +45,17 @@ pub fn set_path(){
                             if user_input == "~" || user_input == "~/"{home_dir.clone()}
                             else{home_dir.join(&user_input[2..])}
                         }
-                        else{std::path::PathBuf::from(user_input)};
+                        else{
+                            std::path::PathBuf::from(user_input)
+                        };
 
                         if user_path.starts_with(&home_dir){
-                            std::fs::create_dir_all(&config_path).expect("ERROR - create config directory failed");
-                            let config_file = config_path.join("destruct-cli-config.txt");
-                            let mut file = std::fs::File::create(&config_file).expect("ERROR - create config file failed");
-                            write!(file, "{}", user_path.display()).expect("ERROR - write config file failed");
-                            console::heading(&format!("SET LIBRARY PATH TO - {}", user_path.display()));
+                            write_config(&config_path, &default_path);
                             break;
                         }
-                        else{println!("ERROR - path must be relative to your home folder");}
+                        else{
+                            println!("ERROR - path must be relative to your home folder");
+                        }
                     }
                 }
             }
