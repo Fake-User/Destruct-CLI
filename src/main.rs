@@ -1,5 +1,4 @@
 mod util;
-mod cmd;
 
 #[tokio::main]
 async fn main(){
@@ -21,7 +20,7 @@ async fn main(){
                 match cmd.trim(){
                     "quit" => {util::console::clear(); break 'main_loop;},
                     "sync" => {util::sync::sync().await},
-                    "path" => {cmd::path::set_path()},
+                    "path" => {util::path::set_path()},
                     "help" => {util::console::help()},
                     _ => {util::console::help()}
                 }

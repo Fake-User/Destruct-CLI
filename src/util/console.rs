@@ -48,11 +48,11 @@ pub fn logo(){
 pub fn help(){
     clear();
     logo();
-    heading("DESTRUCT ADMIN");
+    heading("DESTRUCT CLI");
 
     let logo_array: Vec<&str> = vec![
-        "sync ------------- upload library to r2       path --------- download library from r2",
-        "help -------------- list cli arguements       quit ---------------- quit destruct-cli"
+        "sync ------- sync library        help ------- list commands",
+        "path --- set library path        quit --- quit destruct-cli"
     ];
 
     for line in logo_array {println!("{}", center(line))};

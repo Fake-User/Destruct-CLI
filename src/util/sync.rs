@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use s3sync::pipeline::Pipeline;
 use s3sync::config::Config;
 use crate::util::console;
-use crate::cmd::path;
+use crate::util::path;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Creds {
