@@ -50,7 +50,7 @@ pub fn set_path(){
                         };
 
                         if user_path.starts_with(&home_dir){
-                            write_config(&config_path, &default_path);
+                            write_config(&config_path, &user_path);
                             break;
                         }
                         else{
