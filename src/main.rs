@@ -103,6 +103,7 @@ fn clear(){
 
 fn init(path: String){
     clear();
+    println!("");
     let logo_array: Vec<&str> = vec![
         "   *%@@@@@@@@@@@  @@@@@@@@@@@%*   ",
         " *@@@@@@@@@@@@@@  @@@@@@@@@@@@@@* ",
@@ -122,8 +123,14 @@ fn init(path: String){
         " *@@@@@@@@@@@@@@  @@@@@@@@@@@@@@* ",
         "   *%@@@@@@@@@@@  @@@@@@@@@@@%*   "
     ];
-    println!("");
     for line in logo_array {println!("\x1b[31m{}\x1b[0m", center(line));};
-    heading(format!("DESTRUCT-CLI | PATH - {}", path).as_str());
-    println!("{}", center("sync ------- sync library        quit --- quit destruct-cli\n"));
+
+    heading(format!("PATH: {}", path).as_str());
+
+    let cmd_array: Vec<&str> = vec![
+        "sync ---------------- sync library",
+        "quit ----------- quit destruct-cli"
+    ];
+    for line in cmd_array {println!("{}", center(line));};
+    println!("");
 }
