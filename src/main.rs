@@ -1,4 +1,6 @@
+use tracing_subscriber::fmt::{FmtContext, FormatEvent, FormatFields, format::Writer};
 use s3sync::types::token::create_pipeline_cancellation_token;
+use tracing_subscriber::registry::LookupSpan;
 use s3sync::config::args::parse_from_args;
 use serde::{Deserialize, Serialize};
 use terminal_size::terminal_size;
@@ -6,21 +8,33 @@ use s3sync::pipeline::Pipeline;
 use s3sync::config::Config;
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Creds {
+struct Creds{
     access_key_id: String,
     secret_access_key: String,
     session_token: String
+}
+
+struct EventFormat;
+impl<S, N> FormatEvent<S, N> for EventFormat where S: tracing::Subscriber + for<'a> LookupSpan<'a>, N: for<'a> FormatFields<'a> + 'static{
+    fn format_event(&self, ctx: &FmtContext<'_, S, N>, mut writer: Writer<'_>, event: &tracing::Event<'_>) -> std::fmt::Result {
+        let mut event_string = String::new();
+        ctx.field_format().format_fields(Writer::new(&mut event_string), event)?;
+
+        let file_name = event_string
+            .split("key=\"")
+            .nth(1)
+            .and_then(|s| s.split('"').next());
+
+        if let Some(path) = file_name {write!(writer, "sync | {}\n", path.split('/').last().unwrap_or(path))}
+        else {write!(writer, "{}\n", event_string)}
+    }
 }
 
 #[tokio::main]
 async fn main(){
     tracing_subscriber::fmt()
         .with_max_level(tracing::Level::INFO)
-        .with_line_number(false)
-        .with_target(false)
-        .with_level(false)
-        .with_ansi(false)
-        .without_time()
+        .event_format(EventFormat)
         .init();
 
     let path: String = dirs::audio_dir()
@@ -84,10 +98,10 @@ async fn sync(path: String){
     heading(format!("COMPLETED SYNC TO - {}", path).as_str());
 }
 
-fn center(text: &str) -> String {
+fn center(text: &str) -> String{
     let term_width = terminal_size().unwrap().0.0;
     let length = text.len() as u16;
-    if length >= term_width {return text.to_string()};
+    if length >= term_width{return text.to_string()};
     let padding = std::cmp::max((term_width - length) / 2, 0);
     format!("{:>width$}{}{:width$}", "", text, "", width = padding as usize)
 }
@@ -123,7 +137,7 @@ fn init(path: String){
         " *@@@@@@@@@@@@@@  @@@@@@@@@@@@@@* ",
         "   *%@@@@@@@@@@@  @@@@@@@@@@@%*   "
     ];
-    for line in logo_array {println!("\x1b[31m{}\x1b[0m", center(line));};
+    for line in logo_array {println!("\x1b[31m{}\x1b[0m", center(line))};
 
     heading(format!("PATH: {}", path).as_str());
 
@@ -131,6 +145,6 @@ fn init(path: String){
         "sync ---------------- sync library",
         "quit ----------- quit destruct-cli"
     ];
-    for line in cmd_array {println!("{}", center(line));};
+    for line in cmd_array{println!("{}", center(line))};
     println!("");
 }
