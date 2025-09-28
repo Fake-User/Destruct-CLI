@@ -1117,7 +1117,7 @@ dependencies = [
 
 [[package]]
 name = "destruct-cli"
-version = "0.2.5"
+version = "0.2.7"
 dependencies = [
  "dirs",
  "reqwest",
